@@ -1,29 +1,20 @@
 module.exports = function(grunt) {
 
-require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
-
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    shell: {
+    jshint: {
+      files: ['Gruntfile.js', 'specs/*.js'],
       options: {
-        stdout: true
-      },
-      selenium: {
-        command: './selenium/start',
-        options: {
-          stdout: false,
-          async: true
+        // options here to override JSHint defaults
+        globals: {
+          jQuery: true,
+          console: true,
+          module: true,
+          document: true
         }
-      },
-      protractor_install: {
-        command: 'node ./node_modules/protractor/bin/webdriver-manager update'
-      },
-      npm_install: {
-        command: 'npm install'
       }
     },
-
     protractor: {
       options: {
         keepAlive: true,
@@ -38,13 +29,30 @@ require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
           }
         }
       }
+    },
+    shell: {
+      options: {
+        stdout: true
+      },
+      protractor_install: {
+        command: 'node ./node_modules/protractor/bin/webdriver-manager update'
+      },
+      npm_install: {
+        command: 'npm install'
+      }
     }
 
   });
 
 
-  grunt.registerTask('test:e2e', ['protractor:singlerun']);
-  grunt.registerTask('install', ['update','shell:protractor_install']);
-  grunt.registerTask('update', ['shell:npm_install']);
+  grunt.loadNpmTasks('grunt-protractor-runner');
+
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+
+  grunt.loadNpmTasks('grunt-shell-spawn');
+
+  grunt.registerTask('install', ['shell:npm_install', 'shell:protractor_install']);
+  
+  grunt.registerTask('default', ['jshint', 'protractor:singlerun']);
 
 };

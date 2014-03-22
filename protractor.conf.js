@@ -1,4 +1,4 @@
-var ScreenShotReporter = require('protractor-screenshot-reporter-with-postprocessing');
+var HtmlReporter = require('protractor-html-screenshot-reporter');
 var path = require('path');
 // A reference configuration file.
 exports.config = {
@@ -13,7 +13,7 @@ exports.config = {
   // 3. sauceUser/sauceKey - to use remote Selenium servers via SauceLabs.
 
   // The location of the selenium standalone server .jar file.
-  seleniumServerJar: 'node_modules/protractor/selenium/selenium-server-standalone-2.37.0.jar',
+  seleniumServerJar: 'node_modules/protractor/selenium/selenium-server-standalone-2.40.0.jar',
   // The port to start the selenium server on, or null if the server should
   // find its own unused port.
   seleniumPort: null,
@@ -58,29 +58,9 @@ exports.config = {
   rootElement: 'body',
 
   onPrepare: function() {
-      // Add a screenshot reporter:
-      jasmine.getEnv().addReporter(new ScreenShotReporter({
+      // Add a reporter and store screenshots to `screnshots`:
+      jasmine.getEnv().addReporter(new HtmlReporter({
          baseDirectory: 'screenshots',
-         metaDataBuilder: function(spec, descriptions, results, capabilities){
-            var metaData = {
-                description: descriptions.join('|')
-                , passed: results.passed()
-                , os: capabilities.caps_.platform
-                , browser: {
-                  name: capabilities.caps_.browserName
-                  , version: capabilities.caps_.version
-                }
-              };
-
-            if(results.items_.length > 0) {
-              var result = results.items_[0];
-              metaData.message = result.message;
-              metaData.trace = result.trace.stack;
-            }
-
-            return metaData;
-
-         },
          pathBuilder: function pathBuilder(spec, descriptions, results, capabilities) {
           
             var monthMap = {
@@ -107,8 +87,7 @@ exports.config = {
             return path.join(totalDateString,capabilities.caps_.browserName, descriptions.join('-'));
          }
       }));
-  },
-
+   },
 
   // ----- Options to be passed to minijasminenode -----
   jasmineNodeOpts: {

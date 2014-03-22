@@ -14,14 +14,16 @@ You can see the detailed post on the following link. The features currently supp
 http://programmerbuddy.blogspot.in/2014/03/full-automation-of-protractor-e2e-tests.html
 
 ## Installation
-Do the following commands after cloning this repo
+Do the following commands after downloading this repo
 
 ```bash
 
 $ npm install
 $ grunt install
-$ grunt test:e2e
+$ grunt
 
 ```
+
+You can see the step by step tutorial on this on http://programmerbuddy.blogspot.in/2014/03/full-automation-of-protractor-e2e-tests.html. 
 
 
